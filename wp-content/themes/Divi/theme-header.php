@@ -18,6 +18,7 @@ $show_header_social_icons = $et_secondary_nav_items->show_header_social_icons;
 $et_secondary_nav         = $et_secondary_nav_items->secondary_nav;
 $et_top_info_defined      = $et_secondary_nav_items->top_info_defined;
 $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) || 'fullscreen' === et_get_option( 'header_style', 'left' ) ? true : false;
+$show_search_icon         = ( false !== et_get_option( 'show_search_icon', true ) && ! $et_slide_header ) || is_customize_preview();
 ?>
 <?php if ( $et_top_info_defined && ! $et_slide_header || is_customize_preview() ) : ?>
 	<?php ob_start(); ?>
@@ -27,11 +28,11 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 		<?php if ( $et_contact_info_defined ) : ?>
 
 			<div id="et-info">
-			<?php if ( '' !== ( $et_phone_number = et_get_option( 'phone_number' ) ) ) : ?>
-				<span id="et-info-phone"><?php echo et_core_esc_previously( et_sanitize_html_input_text( $et_phone_number ) ); ?></span>
+			<?php if ( ! empty( $et_phone_number = et_get_option( 'phone_number' ) ) ) : ?>
+				<span id="et-info-phone"><?php echo et_core_esc_previously( et_sanitize_html_input_text( strval( $et_phone_number ) ) ); ?></span>
 			<?php endif; ?>
 
-			<?php if ( '' !== ( $et_email = et_get_option( 'header_email' ) ) ) : ?>
+			<?php if ( ! empty( $et_email = et_get_option( 'header_email' ) ) ) : ?>
 				<a href="<?php echo esc_attr( 'mailto:' . $et_email ); ?>"><span id="et-info-email"><?php echo esc_html( $et_email ); ?></span></a>
 			<?php endif; ?>
 
@@ -39,7 +40,7 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 			if ( true === $show_header_social_icons ) {
 				get_template_part( 'includes/social_icons', 'header' );
 			} ?>
-			</div> <!-- #et-info -->
+			</div>
 
 		<?php endif; // true === $et_contact_info_defined ?>
 
@@ -70,10 +71,10 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 
 				et_show_cart_total();
 			?>
-			</div> <!-- #et-secondary-menu -->
+			</div>
 
-		</div> <!-- .container -->
-	</div> <!-- #top-header -->
+		</div>
+	</div>
 <?php
 	$top_header = ob_get_clean();
 
@@ -136,22 +137,22 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 		<?php if ( $et_contact_info_defined ) : ?>
 
 			<div id="et-info">
-			<?php if ( '' !== ( $et_phone_number = et_get_option( 'phone_number' ) ) ) : ?>
-				<span id="et-info-phone"><?php echo et_core_esc_previously( et_sanitize_html_input_text( $et_phone_number ) ); ?></span>
+			<?php if ( ! empty( $et_phone_number = et_get_option( 'phone_number' ) ) ) : ?>
+				<span id="et-info-phone"><?php echo et_core_esc_previously( et_sanitize_html_input_text( strval( $et_phone_number ) ) ); ?></span>
 			<?php endif; ?>
 
-			<?php if ( '' !== ( $et_email = et_get_option( 'header_email' ) ) ) : ?>
+			<?php if ( ! empty( $et_email = et_get_option( 'header_email' ) ) ) : ?>
 				<a href="<?php echo esc_attr( 'mailto:' . $et_email ); ?>"><span id="et-info-email"><?php echo esc_html( $et_email ); ?></span></a>
 			<?php endif; ?>
-			</div> <!-- #et-info -->
+			</div>
 
 		<?php endif; // true === $et_contact_info_defined ?>
 		<?php if ( $et_contact_info_defined || true === $show_header_social_icons || false !== et_get_option( 'show_search_icon', true ) || class_exists( 'woocommerce' ) || is_customize_preview() ) { ?>
 			<?php if ( 'fullscreen' === et_get_option( 'header_style', 'left' ) ) { ?>
-				</div> <!-- .et_pb_top_menu_inner -->
+				</div>
 			<?php } ?>
 
-			</div> <!-- .et_slide_menu_top -->
+			</div>
 		<?php } ?>
 
 		<div class="et_pb_fullscreen_nav_container">
@@ -273,11 +274,11 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 					<span class="mobile_menu_bar et_pb_header_toggle et_toggle_<?php echo esc_attr( et_get_option( 'header_style', 'left' ) ); ?>_menu"></span>
 				<?php endif; ?>
 
-				<?php if ( ( false !== et_get_option( 'show_search_icon', true ) && ! $et_slide_header ) || is_customize_preview() ) : ?>
-				<div id="et_top_search">
-					<span id="et_search_icon"></span>
-				</div>
-				<?php endif; // true === et_get_option( 'show_search_icon', false ) ?>
+				<?php if ( $show_search_icon ) : ?>
+					<div id="et_top_search">
+						<span id="et_search_icon"></span>
+					</div>
+				<?php endif; ?>
 
 				<?php
 
@@ -291,6 +292,7 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 				?>
 			</div> <!-- #et-top-navigation -->
 		</div> <!-- .container -->
+		<?php if ( $show_search_icon ) : ?>
 		<div class="et_search_outer">
 			<div class="container et_search_form_container">
 				<form role="search" method="get" class="et-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
@@ -312,6 +314,7 @@ $et_slide_header          = 'slide' === et_get_option( 'header_style', 'left' ) 
 				<span class="et_close_search_field"></span>
 			</div>
 		</div>
+		<?php endif; ?>
 	</header> <!-- #main-header -->
 <?php
 	$main_header = ob_get_clean();

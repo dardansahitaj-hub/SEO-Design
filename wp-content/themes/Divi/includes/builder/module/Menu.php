@@ -46,6 +46,10 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 						'title'    => esc_html__( 'Logo', 'et_builder' ),
 						'priority' => 59,
 					),
+					'cart_quantity'  => array(
+						'title'    => esc_html__( 'Cart Quantity Text', 'et_builder' ),
+						'priority' => 69,
+					),
 				),
 			),
 			'custom_css' => array(
@@ -64,7 +68,7 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 
 		$this->advanced_fields = array(
 			'fonts'          => array(
-				'menu' => array(
+				'menu'          => array(
 					'label'           => esc_html__( 'Menu', 'et_builder' ),
 					'css'             => array(
 						'main'         => "{$this->main_css_element} ul li a",
@@ -88,6 +92,62 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 							'min'  => '0',
 							'max'  => '8',
 							'step' => '1',
+						),
+					),
+					'hide_text_align' => true,
+				),
+				'cart_quantity' => array(
+					'label'           => esc_html__( 'Cart Quantity', 'et_builder' ),
+					'css'             => array(
+						'main' => "{$this->main_css_element} .et_pb_menu__icon.et_pb_menu__icon__with_count .et_pb_menu__cart-count",
+					),
+					'font'            => array(
+						'mobile_options' => false,
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
+						),
+					),
+					'line_height'     => array(
+						'default'        => '1em',
+						'mobile_options' => false,
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
+						),
+					),
+					'font_size'       => array(
+						'default'        => '14px',
+						'mobile_options' => false,
+						'range_settings' => array(
+							'min'  => '12',
+							'max'  => '24',
+							'step' => '1',
+						),
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
+						),
+					),
+					'letter_spacing'  => array(
+						'default'        => '0px',
+						'mobile_options' => false,
+						'range_settings' => array(
+							'min'  => '0',
+							'max'  => '8',
+							'step' => '1',
+						),
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
+						),
+					),
+					'text_color'      => array(
+						'mobile_options' => false,
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
+						),
+					),
+					'text_shadow'     => array(
+						'mobile_options' => false,
+						'show_if'        => array(
+							'show_cart_quantity' => 'on',
 						),
 					),
 					'hide_text_align' => true,
@@ -473,6 +533,21 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 				'responsive'      => true,
 				'hover'           => 'tabs',
 				'sticky'          => true,
+				'affects'         => array( 'show_cart_quantity' ),
+			),
+			'show_cart_quantity'              => array(
+				'label'           => esc_html__( 'Show Cart Quantity', 'et_builder' ),
+				'type'            => 'yes_no_button',
+				'option_category' => 'layout',
+				'options'         => array(
+					'on'  => et_builder_i18n( 'Yes' ),
+					'off' => et_builder_i18n( 'No' ),
+				),
+				'default'         => 'off',
+				'toggle_slug'     => 'elements',
+				'show_if'         => array(
+					'show_cart_icon' => 'on',
+				),
 			),
 			'show_search_icon'                => array(
 				'label'           => esc_html__( 'Show Search Icon', 'et_builder' ),
@@ -598,8 +673,8 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 		$fields['dropdown_menu_text_color']        = array( 'color' => "%%order_class%%.{$menu_slug} .nav li ul a" );
 		$fields['dropdown_menu_active_link_color'] = array( 'color' => "%%order_class%%.{$menu_slug} .nav li ul li.current-menu-item a" );
 
-		$fields['logo_width']      = array( 'width' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo, %%order_class%% .et_pb_menu__logo-slot' );
-		$fields['logo_max_width']  = array( 'max-width' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo, %%order_class%% .et_pb_menu__logo-slot' );
+		$fields['logo_width']      = array( 'width' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap, %%order_class%% .et_pb_menu__logo-slot' );
+		$fields['logo_max_width']  = array( 'max-width' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap, %%order_class%% .et_pb_menu__logo-slot' );
 		$fields['logo_height']     = array( 'height' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo img, %%order_class%% .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img' );
 		$fields['logo_max_height'] = array( 'max-height' => '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo img, %%order_class%% .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img' );
 
@@ -788,7 +863,7 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 			ET_Builder_Element::set_style( $render_slug, $el_style );
 		}
 
-		$logo_width_selector  = '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo, %%order_class%% .et_pb_menu__logo-slot';
+		$logo_width_selector  = '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap, %%order_class%% .et_pb_menu__logo-slot';
 		$logo_height_selector = '%%order_class%% .et_pb_menu_inner_container > .et_pb_menu__logo-wrap .et_pb_menu__logo img, %%order_class%% .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img';
 
 		// Width.
@@ -1027,10 +1102,25 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 			return '';
 		}
 
-		$url    = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : WC()->cart->get_cart_url();
-		$output = sprintf(
-			'<a href="%1$s" class="et_pb_menu__icon et_pb_menu__cart-button"></a>',
-			esc_url( $url )
+		$url          = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : WC()->cart->get_cart_url();
+		$show_count   = 'on' === self::$_->array_get( $this->props, 'show_cart_quantity', '' );
+		$items_number = $show_count ? WC()->cart->get_cart_contents_count() : 0;
+		$output       = sprintf(
+			'<a href="%1$s" class="et_pb_menu__icon et_pb_menu__cart-button%3$s">
+				%2$s
+			</a>',
+			esc_url( $url ),
+			$show_count ?
+				sprintf(
+					'<span class="et_pb_menu__cart-count">%1$s</span>',
+					esc_html(
+						sprintf(
+							_nx( '%1$s Item', '%1$s Items', $items_number, 'WooCommerce items number', 'Divi' ),
+							number_format_i18n( $items_number )
+						)
+					)
+				) : '',
+			$show_count ? ' et_pb_menu__icon__with_count' : ''
 		);
 
 		/**
@@ -1317,6 +1407,8 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 				'<div%4$s class="%3$s"%2$s%7$s>
 					%6$s
 					%5$s
+					%13$s
+					%14$s
 					<div class="et_pb_menu_inner_container clearfix">
 						%8$s
 						<div class="et_pb_menu__wrap">
@@ -1341,13 +1433,17 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 				et_core_esc_previously( $this->render_cart() ),
 				et_core_esc_previously( $this->render_search() ),
 				et_core_esc_previously( $mobile_menu ),
-				et_core_esc_previously( $this->render_search_form() )
+				et_core_esc_previously( $this->render_search_form() ),
+				et_core_esc_previously( $this->background_pattern() ), // #13
+				et_core_esc_previously( $this->background_mask() ) // #14
 			);
 		} else {
 			$output = sprintf(
 				'<div%4$s class="%3$s"%2$s%7$s>
 					%6$s
 					%5$s
+					%13$s
+					%14$s
 					<div class="et_pb_menu_inner_container clearfix">
 						%8$s
 						<div class="et_pb_menu__wrap">
@@ -1372,7 +1468,9 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 				et_core_esc_previously( $this->render_cart() ),
 				et_core_esc_previously( $this->render_search() ),
 				et_core_esc_previously( $mobile_menu ),
-				et_core_esc_previously( $this->render_search_form() )
+				et_core_esc_previously( $this->render_search_form() ),
+				et_core_esc_previously( $this->background_pattern() ), // #13
+				et_core_esc_previously( $this->background_mask() ) // #14
 			);
 		}
 
@@ -1380,4 +1478,6 @@ class ET_Builder_Module_Menu extends ET_Builder_Module {
 	}
 }
 
-new ET_Builder_Module_Menu();
+if ( et_builder_should_load_all_module_data() ) {
+	new ET_Builder_Module_Menu();
+}
